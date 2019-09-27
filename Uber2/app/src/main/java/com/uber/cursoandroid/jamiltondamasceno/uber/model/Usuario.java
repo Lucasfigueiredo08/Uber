@@ -1,5 +1,9 @@
 package com.uber.cursoandroid.jamiltondamasceno.uber.model;
 
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.Exclude;
+import com.uber.cursoandroid.jamiltondamasceno.uber.config.ConfiguracaoFirebase;
+
 /**
  * Created by jamiltondamasceno
  */
@@ -13,6 +17,13 @@ public class Usuario {
     private String tipo;
 
     public Usuario() {
+    }
+
+    public void salvar(){
+        DatabaseReference firebaseRef = ConfiguracaoFirebase.getFirebaseDatabase();
+        DatabaseReference usuarios = firebaseRef.child("usuarios").child((getId()));
+
+        usuarios.setValue(this);
     }
 
     public String getId() {
@@ -39,6 +50,7 @@ public class Usuario {
         this.email = email;
     }
 
+    @Exclude
     public String getSenha() {
         return senha;
     }
