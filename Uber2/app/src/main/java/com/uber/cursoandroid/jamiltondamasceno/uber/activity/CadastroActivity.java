@@ -18,6 +18,7 @@ import com.google.firebase.auth.FirebaseAuthUserCollisionException;
 import com.google.firebase.auth.FirebaseAuthWeakPasswordException;
 import com.uber.cursoandroid.jamiltondamasceno.uber.R;
 import com.uber.cursoandroid.jamiltondamasceno.uber.config.ConfiguracaoFirebase;
+import com.uber.cursoandroid.jamiltondamasceno.uber.helper.UsuarioFirebase;
 import com.uber.cursoandroid.jamiltondamasceno.uber.model.Usuario;
 
 public class CadastroActivity extends AppCompatActivity {
@@ -92,6 +93,9 @@ public class CadastroActivity extends AppCompatActivity {
                        String idUsuario = task.getResult().getUser().getUid();
                        usuario.setId( idUsuario );
                        usuario.salvar();
+
+                       //Atualizar nome no UserProfile
+                       UsuarioFirebase.atualizarNomeUsuario(usuario.getNome());
 
                        //Redirecion o usuário com base no seu tipo
                        //Se o usuário for passageiro chama a activity maps
