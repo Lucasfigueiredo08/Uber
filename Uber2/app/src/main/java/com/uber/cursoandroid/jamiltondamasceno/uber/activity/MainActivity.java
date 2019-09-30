@@ -6,6 +6,8 @@ import android.os.Bundle;
 import android.view.View;
 
 import com.uber.cursoandroid.jamiltondamasceno.uber.R;
+import com.uber.cursoandroid.jamiltondamasceno.uber.helper.UsuarioFirebase;
+import com.uber.cursoandroid.jamiltondamasceno.uber.model.Usuario;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -26,4 +28,9 @@ public class MainActivity extends AppCompatActivity {
         startActivity( new Intent(this, CadastroActivity.class));
     }
 
+    @Override
+    protected void onStart() {
+        super.onStart();
+        UsuarioFirebase.redirecionaUsuarioLogado(MainActivity.this);
+    }
 }
