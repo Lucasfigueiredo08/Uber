@@ -34,7 +34,6 @@
             </intent-filter>
         </activity>
 
-        <activity android:name=".activity.MapsActivity" />
         <activity
             android:name=".activity.LoginActivity"
             android:label="@string/titulo_login"

@@ -1,0 +1,9 @@
+<manifest xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <application>
+        <activity
+            android:name="com.uber.cursoandroid.jamiltondamasceno.uber.activity.PassageiroActivity"
+            android:label="@string/title_activity_passageiro"
+            android:theme="@style/AppTheme.NoActionBar"></activity>
+    </application>
+</manifest>
