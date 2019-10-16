@@ -33,7 +33,10 @@ import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.firebase.auth.FirebaseAuth;
 import com.uber.cursoandroid.jamiltondamasceno.uber.R;
 import com.uber.cursoandroid.jamiltondamasceno.uber.config.ConfiguracaoFirebase;
+import com.uber.cursoandroid.jamiltondamasceno.uber.helper.UsuarioFirebase;
 import com.uber.cursoandroid.jamiltondamasceno.uber.model.Destino;
+import com.uber.cursoandroid.jamiltondamasceno.uber.model.Requisicao;
+import com.uber.cursoandroid.jamiltondamasceno.uber.model.Usuario;
 
 import java.io.IOException;
 import java.util.List;
@@ -48,6 +51,7 @@ public class PassageiroActivity extends AppCompatActivity implements OnMapReadyC
     private FirebaseAuth autenticacao;
     private LocationManager locationManager;
     private LocationListener locationListener;
+    private LatLng localPassageiro;
 
     public PassageiroActivity() {
     }
@@ -77,7 +81,7 @@ public class PassageiroActivity extends AppCompatActivity implements OnMapReadyC
             Address addressDestino = recuperarEndereco( enderecoDestino);
             if ( addressDestino != null ) {
 
-                Destino destino = new Destino();
+                final Destino destino = new Destino();
                 destino.setCidade(addressDestino.getAdminArea());
                 destino.setCep(addressDestino.getPostalCode());
                 destino.setBairro(addressDestino.getSubLocality());
@@ -88,10 +92,10 @@ public class PassageiroActivity extends AppCompatActivity implements OnMapReadyC
 
                 StringBuilder mensagem = new StringBuilder();
                 mensagem.append("Cidade: " + destino.getCidade());
-                mensagem.append("Rua: " + destino.getRua());
-                mensagem.append("Bairro: " + destino.getBairro());
-                mensagem.append("Numero: " + destino.getNumero());
-                mensagem.append("Cep: " + destino.getCep());
+                mensagem.append("\nRua: " + destino.getRua());
+                mensagem.append("\nBairro: " + destino.getBairro());
+                mensagem.append("\nNumero: " + destino.getNumero());
+                mensagem.append("\nCep: " + destino.getCep());
 
                 AlertDialog.Builder builder = new AlertDialog.Builder(this)
                         .setTitle("Confirme seu endereco!")
@@ -99,7 +103,8 @@ public class PassageiroActivity extends AppCompatActivity implements OnMapReadyC
                         .setPositiveButton("Confirmar", new DialogInterface.OnClickListener() {
                             @Override
                             public void onClick(DialogInterface dialog, int which) {
-
+                                //salvar requisição
+                                salvarRequisicao( destino );
                             }
                         }).setNegativeButton("Cancelar", new DialogInterface.OnClickListener() {
                             @Override
@@ -116,6 +121,20 @@ public class PassageiroActivity extends AppCompatActivity implements OnMapReadyC
                     "Informe o endereço de destino!",
                     Toast.LENGTH_SHORT).show();
         }
+    }
+
+    private void salvarRequisicao(Destino destino){
+
+        Requisicao requisicao = new Requisicao();
+        requisicao.setDestino(destino);
+
+        Usuario usuarioPassageiro = UsuarioFirebase.getDadosUsuarioLogado();
+        usuarioPassageiro.setLatitude(String.valueOf(localPassageiro.latitude));
+        usuarioPassageiro.setLongitude(String.valueOf(localPassageiro.longitude));
+
+        requisicao.setPassageiro( usuarioPassageiro );
+        requisicao.setStatus(Requisicao.STATUS_AGUARDANDO);
+        requisicao.salvar();
     }
 
     private Address recuperarEndereco(String endereco){
@@ -148,18 +167,18 @@ public class PassageiroActivity extends AppCompatActivity implements OnMapReadyC
                 // recuperar lat e long
                 double latitude = location.getLatitude();
                 double longitude = location.getLongitude();
-                LatLng meuLocal = new LatLng(latitude, longitude);
+                localPassageiro = new LatLng(latitude, longitude);
 
                 mMap.clear();
 
                 mMap.addMarker(
                         new MarkerOptions()
-                                .position(meuLocal)
+                                .position(localPassageiro)
                                 .title("Meu Local")
                                 .icon(BitmapDescriptorFactory.fromResource(R.drawable.usuario))
                 );
                 mMap.moveCamera(
-                        CameraUpdateFactory.newLatLngZoom(meuLocal, 20)
+                        CameraUpdateFactory.newLatLngZoom(localPassageiro, 20)
                 );
             }
 
