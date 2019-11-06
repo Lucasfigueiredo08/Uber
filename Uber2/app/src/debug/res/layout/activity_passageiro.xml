@@ -17,6 +17,7 @@
     <include layout="@layout/content_passageiro" />
 
     <LinearLayout
+        android:id="@+id/linearLayoutDestino"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginLeft="16dp"
@@ -38,7 +39,7 @@
             android:inputType="textPersonName"
             android:textColor="@android:color/darker_gray"
             android:textColorHint="@android:color/darker_gray"
-            android:textSize="18dp"/>
+            android:textSize="18dp" />
 
         <EditText
             android:id="@+id/editDestino"
@@ -57,7 +58,7 @@
     </LinearLayout>
 
     <Button
-        android:id="@+id/button6"
+        android:id="@+id/idButtonChamarUber"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_gravity="bottom"
