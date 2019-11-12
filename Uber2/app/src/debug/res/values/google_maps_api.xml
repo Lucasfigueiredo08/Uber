@@ -19,8 +19,10 @@
 
     Once you have your key (it starts with "AIza"), replace the "google_maps_key"
     string in this file.
-    -->
+    -->]
+    <!-- 1 primeiro
+    ir em configuracoes -> apis -> maps sdk for android -> credenciais -> chave api 4 -> copiar key ou editar por uma nova -> mudar restrições do aplicativo se for necessário -->
     <string name="google_maps_key"
         templateMergeStrategy="preserve"
-        translatable="false">AIzaSyAVXMmIxrJfysh6nLcugE_8nSyA-cU2Nq0</string>
+        translatable="false">AIzaSyC-8jZX1qvp1o6M8TffMHqj-YerhzIdffU</string>
 </resources>

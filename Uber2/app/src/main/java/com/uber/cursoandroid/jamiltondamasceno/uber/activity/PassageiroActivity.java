@@ -47,6 +47,8 @@ import com.uber.cursoandroid.jamiltondamasceno.uber.model.Requisicao;
 import com.uber.cursoandroid.jamiltondamasceno.uber.model.Usuario;
 
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.Locale;
 
@@ -93,15 +95,32 @@ public class PassageiroActivity extends AppCompatActivity implements OnMapReadyC
         requisicoesPesquisa.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
+
+                List<Requisicao> lista = new ArrayList<>();
                 for (DataSnapshot ds: dataSnapshot.getChildren()) {
-                    requisicao = ds.getValue(Requisicao.class);
+                    lista.add(ds.getValue(Requisicao.class));
+                }
+                Collections.reverse(lista);
+                requisicao = lista.get(0); //requisicao mais recente
 
-                    switch (){
-
-                    }
-                    break;
+                switch (requisicao.getStatus()){
+                    case Requisicao.STATUS_AGUARDANDO:
+                        linearLayoutDestino.setVisibility(View.GONE);
+                        buttonChamarUber.setText("Cancelar Uber");
+                        uberChamado = true;
+                        break;
                 }
             }
+//            public void onDataChange(DataSnapshot dataSnapshot) {
+//                for (DataSnapshot ds: dataSnapshot.getChildren()) {
+//                    requisicao = ds.getValue(Requisicao.class);
+////
+////                    switch (){
+////
+////                    }
+////                    break;
+//                }
+//            }
 
             @Override
             public void onCancelled(DatabaseError databaseError) {
