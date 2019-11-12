@@ -76,9 +76,6 @@ public class PassageiroActivity extends AppCompatActivity implements OnMapReadyC
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_passageiro);
 
-        //configurações iniciais
-        firebaseRef = ConfiguracaoFirebase.getFirebaseDatabase();
-
         iniciailizarComponentes();
 
         //adiciona listener para status da requisição
@@ -101,14 +98,17 @@ public class PassageiroActivity extends AppCompatActivity implements OnMapReadyC
                     lista.add(ds.getValue(Requisicao.class));
                 }
                 Collections.reverse(lista);
-                requisicao = lista.get(0); //requisicao mais recente
 
-                switch (requisicao.getStatus()){
-                    case Requisicao.STATUS_AGUARDANDO:
-                        linearLayoutDestino.setVisibility(View.GONE);
-                        buttonChamarUber.setText("Cancelar Uber");
-                        uberChamado = true;
-                        break;
+                if(lista!=null && lista.size()>0){
+                    requisicao = lista.get(0); //requisicao mais recente
+
+                    switch (requisicao.getStatus()){
+                        case Requisicao.STATUS_AGUARDANDO:
+                            linearLayoutDestino.setVisibility(View.GONE);
+                            buttonChamarUber.setText("Cancelar Uber");
+                            uberChamado = true;
+                            break;
+                    }
                 }
             }
 //            public void onDataChange(DataSnapshot dataSnapshot) {
@@ -314,6 +314,7 @@ public class PassageiroActivity extends AppCompatActivity implements OnMapReadyC
 
         //configuracoes iniciais
         autenticacao = ConfiguracaoFirebase.getFirebaseAutenticacao();
+        firebaseRef = ConfiguracaoFirebase.getFirebaseDatabase();
 
         // Obtain the SupportMapFragment and get notified when the map is ready to be used.
         SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager()
