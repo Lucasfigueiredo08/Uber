@@ -13,6 +13,7 @@ import android.support.v4.app.ActivityCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.View;
+import android.widget.Button;
 
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
@@ -21,14 +22,28 @@ import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.ValueEventListener;
 import com.uber.cursoandroid.jamiltondamasceno.uber.R;
+import com.uber.cursoandroid.jamiltondamasceno.uber.config.ConfiguracaoFirebase;
+import com.uber.cursoandroid.jamiltondamasceno.uber.model.Requisicao;
+import com.uber.cursoandroid.jamiltondamasceno.uber.model.Usuario;
 
 public class CorridaActivity extends AppCompatActivity implements OnMapReadyCallback {
+
+    //componentes
+    private Button buttonAceitarCorrida;
 
     private GoogleMap mMap;
     private LocationManager locationManager;
     private LocationListener locationListener;
     private LatLng localMotorista;
+    private Usuario motorista;
+    private String idRequisicao;
+    private Requisicao requisicao;
+    private DatabaseReference firebaseRef;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -36,7 +51,50 @@ public class CorridaActivity extends AppCompatActivity implements OnMapReadyCall
         setContentView(R.layout.activity_corrida);
 
         inicializarComponentes();
+
+        //Recuperar dados do usuario
+        if(getIntent().getExtras().containsKey("idRequisicao") && getIntent().getExtras().containsKey("motorista")){
+            Bundle extras = getIntent().getExtras();
+            motorista = (Usuario) extras.getSerializable("motorista");
+            idRequisicao = extras.getString("idRequisicao");
+            verificaStatusRequisicao();
+        }
     }
+
+    private void verificaStatusRequisicao(){
+        final DatabaseReference requisicoes = firebaseRef.child("requisicoes")
+                .child(idRequisicao);
+        requisicoes.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                //Recuperar requisicao
+                requisicao = dataSnapshot.getValue(Requisicao.class);
+                switch(requisicao.getStatus()){
+                    case Requisicao.STATUS_AGUARDANDO:
+                        requisicaoAguardando();
+                        break;
+                    case Requisicao.STATUS_A_CAMINHO:
+                        requisicaoACaminho();
+                        break;
+                }
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+
+            }
+        });
+
+    }
+
+    private void requisicaoAguardando(){
+        buttonAceitarCorrida.setText("Aceitar Corrida");
+    }
+
+    private void requisicaoACaminho(){
+        buttonAceitarCorrida.setText("A caminho do passageiro");
+    }
+
 
     @Override
     public void onMapReady(GoogleMap googleMap) {
@@ -99,13 +157,27 @@ public class CorridaActivity extends AppCompatActivity implements OnMapReadyCall
     }
 
     public void aceitarCorrida(View view){
+        //configura requisicao
+        requisicao = new Requisicao();
+        requisicao.setId(idRequisicao);
+        requisicao.setMotorista(motorista);
+        requisicao.setStatus(Requisicao.STATUS_A_CAMINHO);
 
+        requisicao.atualizar();
     }
 
     private void inicializarComponentes(){
         Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
+
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        getSupportActionBar().setTitle("Iniciar Corrida");
+
+        buttonAceitarCorrida = findViewById(R.id.idButtonAceitarCorrida);
+
+        //Configuracoes iniciais
+        firebaseRef = ConfiguracaoFirebase.getFirebaseDatabase();
+
         // Obtain the SupportMapFragment and get notified when the map is ready to be used.
         SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager()
                 .findFragmentById(R.id.map);

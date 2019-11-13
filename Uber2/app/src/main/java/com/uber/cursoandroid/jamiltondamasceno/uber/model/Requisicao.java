@@ -3,6 +3,9 @@ package com.uber.cursoandroid.jamiltondamasceno.uber.model;
 import com.google.firebase.database.DatabaseReference;
 import com.uber.cursoandroid.jamiltondamasceno.uber.config.ConfiguracaoFirebase;
 
+import java.util.HashMap;
+import java.util.Map;
+
 public class Requisicao {
 
     private String id;
@@ -27,6 +30,19 @@ public class Requisicao {
         setId(idRequisicao);
 
         requisicoes.child(getId()).setValue(this);
+    }
+
+    public void atualizar(){
+        DatabaseReference firebaseRef = ConfiguracaoFirebase.getFirebaseDatabase();
+        DatabaseReference requisicoes = firebaseRef.child("requisicoes");
+
+        DatabaseReference requisicao = requisicoes.child(getId());
+
+        Map objeto = new HashMap();
+        objeto.put("motorista", getMotorista());
+        objeto.put("status", getStatus());
+
+        requisicao.updateChildren(objeto);
     }
 
     public String getId() {
