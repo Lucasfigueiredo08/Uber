@@ -4,11 +4,13 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.Exclude;
 import com.uber.cursoandroid.jamiltondamasceno.uber.config.ConfiguracaoFirebase;
 
+import java.io.Serializable;
+
 /**
  * Created by jamiltondamasceno
  */
 
-public class Usuario {
+public class Usuario implements Serializable {
 
     private String id;
     private String nome;

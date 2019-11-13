@@ -1,6 +1,8 @@
 package com.uber.cursoandroid.jamiltondamasceno.uber.adpter;
 
 import android.content.Context;
+import android.location.LocationListener;
+import android.location.LocationManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -18,6 +20,7 @@ public class RequisicoesAdapter extends RecyclerView.Adapter<RequisicoesAdapter.
     private List<Requisicao> requisicoes;
     private Context context;
     private Usuario motorista;
+
 
     public RequisicoesAdapter(List<Requisicao> requisicoes, Context context, Usuario motorista) {
         this.requisicoes = requisicoes;
