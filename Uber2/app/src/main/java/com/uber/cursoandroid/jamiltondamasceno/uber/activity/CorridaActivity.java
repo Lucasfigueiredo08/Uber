@@ -122,6 +122,15 @@ public class CorridaActivity extends AppCompatActivity implements OnMapReadyCall
 
 
         LatLngBounds bounds = builder.build();
+
+        // recupera informações do display do dispositivo
+        int largura = getResources().getDisplayMetrics().widthPixels;
+        int altura = getResources().getDisplayMetrics().heightPixels;
+        int espacoInterno = (int) (largura * 0.20);
+
+        mMap.moveCamera( //altura, largura, padding
+            CameraUpdateFactory.newLatLngBounds(bounds, largura, altura, espacoInterno)
+        );
     }
 
     private void adicionarMarcadorMotorista(LatLng localizacao, String titulo){
