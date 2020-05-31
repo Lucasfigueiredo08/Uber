@@ -84,10 +84,11 @@ public class RequisicoesActivity extends AppCompatActivity {
         return super.onOptionsItemSelected(item);
     }
 
-    private void abrirTelaCorrida(String idRequisicao, Usuario motorista){
+    private void abrirTelaCorrida(String idRequisicao, Usuario motorista, boolean requisicaoAtiva){
         Intent i = new Intent(RequisicoesActivity.this, CorridaActivity.class);
         i.putExtra("idRequisicao", idRequisicao);
         i.putExtra("motorista", motorista);
+        i.putExtra("requisicaoAtiva", requisicaoAtiva);
         startActivity(i);
     }
 
@@ -119,7 +120,7 @@ public class RequisicoesActivity extends AppCompatActivity {
                             @Override
                             public void onItemClick(View view, int position) {
                                 Requisicao requisicao = listaRequisicoes.get(position);
-                                abrirTelaCorrida(requisicao.getId(), motorista);
+                                abrirTelaCorrida(requisicao.getId(), motorista, false);
                             }
 
                             @Override
@@ -162,7 +163,7 @@ public class RequisicoesActivity extends AppCompatActivity {
 
                     if( requisicao.getStatus().equals(Requisicao.STATUS_A_CAMINHO)
                             || requisicao.getStatus().equals(Requisicao.STATUS_VIAGEM)){
-                        abrirTelaCorrida(requisicao.getId(), motorista);
+                        abrirTelaCorrida(requisicao.getId(), motorista, true);
                     };
 
                 }
